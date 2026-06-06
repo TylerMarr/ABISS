@@ -22,10 +22,10 @@ The current prototype is approximately 4 × 3 inches, weighs approximately 150 g
 
 ```
 ABISS/
-├── visual_stimulus/
-│   └── visual_stimulus.ino    # VGA drifting-bar stimulus generator
-├── audio_stimulus/
-│   └── audio_stimulus.ino     # Tone sequence generator with ramp control
+├── Visual/
+│   └── VGA_Visual_Stimulus.ino    # VGA drifting-bar stimulus generator
+├── Audio/
+│   └── Aduio_Stimulus.ino     # Tone sequence generator with ramp control
 └── README.md
 ```
 
