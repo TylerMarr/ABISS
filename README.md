@@ -195,7 +195,3 @@ If you use ABISS in your research, please cite the associated paper:
 > Qu Z, Kazemi K, Wu T, Doddapujar SN, Marrazzo TA, Gazzola M, Gritton HJ. *ABISS: An Arduino-Based Intrinsic Stimulation System for Low-Cost Auditory and Visual Intrinsic Signal Imaging.* 2026.
 
 ---
-
-## License
-
-Released for open academic and research use. See LICENSE for details.
