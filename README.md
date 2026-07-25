@@ -98,7 +98,7 @@ Full sourcing details and pricing are provided in **Supplementary Table 1** of t
 
 ## Firmware Overview
 
-The firmware was developed in the Arduino IDE using an interrupt-driven architecture to synchronize audio and video outputs while maintaining real-time responsiveness. The two modules run on separate Arduino Nano boards and are synchronized via the shared 20 Hz camera trigger signal.
+The firmware was developed in the Arduino IDE using an interrupt-driven architecture to synchronize audio and video outputs while maintaining real-time responsiveness. The two modules run independently on the same Arduino Nano board based on which program was most recently flashed onto it.
 
 ### Visual Stimulus Firmware
 
