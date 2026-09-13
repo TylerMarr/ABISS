@@ -4,18 +4,6 @@
   - No pre-roll: button press starts immediately
   - First step starts immediately; camera trigger starts on that exact frame
 
-  CHANGES FROM ORIGINAL:
-  1. setBarSpeed = 0.45f  (was 0.15f; x3 to keep same visual speed at 20Hz logic)
-  2. Pause frame counts divided by 3 (counted at 20Hz now, not 60Hz)
-  3. loop(): advanceFrame() only called every 3rd VGA frame (20Hz logic rate)
-  4. loop(): newFrame = false moved HERE (always clears every frame).
-             In original it was inside advanceFrame(). When advanceFrame() was
-             skipped on 2 of 3 frames, newFrame was never cleared, causing
-             doOneScanLine() to return true on every scanline for those frames,
-             which called updateCameraTriggerFrameTick() hundreds of times per
-             frame and completely broke the 20Hz camera timing.
-  5. advanceFrame(): all "newFrame = false" lines removed (handled in loop now)
-
   Wiring:
   D3  : HSYNC (68 ohm series)      -> DB15 pin 13
   D4  : RED   (470 ohm series)     -> DB15 pin 1
