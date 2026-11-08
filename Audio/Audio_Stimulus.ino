@@ -15,7 +15,7 @@ AD9833 waveGenerator(FNC_PIN);
 
 // -------------------- Global Variables -----------------------
 int frequencyList[] = {3000, 10000, 30000};
-int volumeList[] = {20,12,10}; // Default volume / Starting Volume // lower number means louder
+int volumeList[] = {14,7,7}; // Default volume / Starting Volume // lower number means louder
 int blinkCount = 0; //keeps track of time for the tone generating part
 int frequencyIndex = 0; //keeps track of which frequency we're using
 bool isRunning = false; //keeps track of if the tone is actively being generated or not
@@ -25,10 +25,10 @@ volatile unsigned long cycleStartTime = 0;
 volatile bool newCycleReady = false;
 
 // -------------------- Timing Customization --------------------
-double delayUntilStimulus = 2.0; //keeps track of user input for time offset from cam start to tone start, default 2.0
-double stimulusTime = 2.0; //keeps track of how long we play stimulus for, default 2.0
-double delayAfterStimulus = 2.0; //keeps track of how long we wait after stimulus to turn cam off, default 2.0
-double restTimeInSeconds = 30.0; //keeps track of how long we pause between blinking sequences, default 3.0
+double delayUntilStimulus = 1.50; //keeps track of user input for time offset from cam start to tone start, default 2.0 (compared with tdt using 1.50)
+double stimulusTime = 1.0; //keeps track of how long we play stimulus for, default 2.0 (compared with tdt using 1.0)
+double delayAfterStimulus = 1.50; //keeps track of how long we wait after stimulus to turn cam off, default 2.0 (compared with tdt using 1.50)
+double restTimeInSeconds = 27.0; //keeps track of how long we pause between blinking sequences, default 3.0
 double blinksPerSecond = 20.0; //keeps track of how many times we blink per second, int for simplicity, default 20.0
 double buttonToStartTime = 1.0; //keeps track of how long we wait after a button press to really start our system, default 1.0
 int numberOfRampUpSteps = 150; //keeps track of how many steps we take in the ramp-up process, default 150
@@ -112,36 +112,36 @@ static int generateTone(struct pt *pt) {
         lastTime = micros();
         PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros); //this waits stepIntervalInMicros seconds for waveGenerator to turn on
 
-        //ramp up
-        targetVolume = (double)currentVolume;
-        volumeRange = 79.0 - targetVolume;
-        stepSize = volumeRange / numberOfRampUpSteps;
-        for(i = 0; i < numberOfRampUpSteps; i++) {
-          stepper = 79.0 - (stepSize * i);
-          pt2258.attenuation(1, max((int)stepper, (int)targetVolume));
-          lastTime = micros();
-          PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
-        }
-        lastTime = micros();
-        PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
+        ////ramp up
+        //targetVolume = (double)currentVolume;
+        //volumeRange = 79.0 - targetVolume;
+        //stepSize = volumeRange / numberOfRampUpSteps;
+        //for(i = 0; i < numberOfRampUpSteps; i++) {
+          //stepper = 79.0 - (stepSize * i);
+          //pt2258.attenuation(1, max((int)stepper, (int)targetVolume));
+          //lastTime = micros();
+          //PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
+        //}
+        //lastTime = micros();
+        //PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
         pt2258.attenuation(1, (int)targetVolume);
         //PT_WAIT_UNTIL(pt, blinkCount > (blinkingDurationInBlinks - delayAfterStimulusBlinks)); //plays at max volume here
         target = startTime + ((blinkingDurationInSeconds-delayAfterStimulus) * 1000000);
         PT_WAIT_UNTIL(pt, micros() > target);
-        lastTime = micros();
-        PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
+        //lastTime = micros();
+        //PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
 
-        //ramp down
-        stepSize = volumeRange / numberOfRampDownSteps;
-        for(i = 0; i < numberOfRampDownSteps; i++) {
-          stepper = targetVolume + (stepSize * i);
-          pt2258.attenuation(1, min((int)stepper, 79));
-          lastTime = micros();
-          PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
-        }
+        ////ramp down
+        //stepSize = volumeRange / numberOfRampDownSteps;
+        //for(i = 0; i < numberOfRampDownSteps; i++) {
+          //stepper = targetVolume + (stepSize * i);
+         //pt2258.attenuation(1, min((int)stepper, 79));
+          //lastTime = micros();
+          //PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
+        //}
 
-        lastTime = micros();
-        PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
+        //lastTime = micros();
+        //PT_WAIT_UNTIL(pt, micros() - lastTime > stepIntervalInMicros);
         pt2258.attenuation(1, 79);
         waveGenerator.EnableOutput(false); //turns off tone generation
         
@@ -176,7 +176,7 @@ void setup() {
 void loop() {
     int currentButtonState = digitalRead(BUTTON_PIN);
     static int previousButtonState = HIGH;
-    if (frequencyIndex == 30) { //30 cycles of our program
+    if (frequencyIndex >= 60) { //30 cycles of our program
         waveGenerator.EnableOutput(false);
         digitalWrite(LED_PIN, LOW);
         previousButtonState = HIGH;
